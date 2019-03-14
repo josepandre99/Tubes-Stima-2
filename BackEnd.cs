@@ -132,7 +132,6 @@ namespace BackEnd
             else
             {
                 bool cek = false;
-
                 for (int i = 0; i < edges[Y].Count; i++)
                 {
                     int nextr = edges[Y][i];
