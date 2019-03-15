@@ -37,9 +37,9 @@
             // 
             // button_LoadFile
             // 
-            this.button_LoadFile.Location = new System.Drawing.Point(12, 22);
+            this.button_LoadFile.Location = new System.Drawing.Point(28, 12);
             this.button_LoadFile.Name = "button_LoadFile";
-            this.button_LoadFile.Size = new System.Drawing.Size(75, 23);
+            this.button_LoadFile.Size = new System.Drawing.Size(301, 73);
             this.button_LoadFile.TabIndex = 0;
             this.button_LoadFile.Text = "Load File";
             this.button_LoadFile.UseVisualStyleBackColor = true;
@@ -47,9 +47,9 @@
             // 
             // button_Check
             // 
-            this.button_Check.Location = new System.Drawing.Point(377, 22);
+            this.button_Check.Location = new System.Drawing.Point(212, 90);
             this.button_Check.Name = "button_Check";
-            this.button_Check.Size = new System.Drawing.Size(75, 23);
+            this.button_Check.Size = new System.Drawing.Size(117, 23);
             this.button_Check.TabIndex = 1;
             this.button_Check.Text = "Check";
             this.button_Check.UseVisualStyleBackColor = true;
@@ -60,23 +60,23 @@
             // 
             // panel_DrawGraph
             // 
-            this.panel_DrawGraph.Location = new System.Drawing.Point(12, 62);
+            this.panel_DrawGraph.Location = new System.Drawing.Point(28, 132);
             this.panel_DrawGraph.Name = "panel_DrawGraph";
-            this.panel_DrawGraph.Size = new System.Drawing.Size(440, 227);
+            this.panel_DrawGraph.Size = new System.Drawing.Size(782, 427);
             this.panel_DrawGraph.TabIndex = 2;
             // 
             // textBox_InputQuery
             // 
-            this.textBox_InputQuery.Location = new System.Drawing.Point(271, 24);
+            this.textBox_InputQuery.Location = new System.Drawing.Point(28, 91);
             this.textBox_InputQuery.Name = "textBox_InputQuery";
-            this.textBox_InputQuery.Size = new System.Drawing.Size(100, 20);
+            this.textBox_InputQuery.Size = new System.Drawing.Size(178, 20);
             this.textBox_InputQuery.TabIndex = 3;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(476, 301);
+            this.ClientSize = new System.Drawing.Size(840, 571);
             this.Controls.Add(this.textBox_InputQuery);
             this.Controls.Add(this.panel_DrawGraph);
             this.Controls.Add(this.button_Check);

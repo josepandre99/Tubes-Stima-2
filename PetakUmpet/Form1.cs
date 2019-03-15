@@ -11,158 +11,11 @@ using System.Windows.Forms;
 
 namespace PetakUmpet
 {
-    //ClassGraph declaration
-    public class ClassGraph
-    {
-        static int banyakRumah()
-        {
-            try
-            {
-                int nRumah = 0;
-                using (StreamReader sr = new StreamReader("coba.txt"))
-                {
-                    nRumah = int.Parse(sr.ReadLine());
-                    return nRumah;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
-                return 0;
-            }
-        }
-
-        // Inisialisai graf
-        public static List<int>[] vertex = new List<int>[10];
-
-        // Menambahkan edge pada graf
-        static void addEgde(int asal, int tujuan)
-        {
-            ClassGraph.vertex[asal].Add(tujuan);
-            ClassGraph.vertex[tujuan].Add(asal);
-        }
-
-        static void Telusuri(int rAwal, int nRumah)
-        {
-            bool[] visited = new bool[nRumah + 1];
-            hasil(rAwal, visited, nRumah + 1);
-        }
-
-        static void hasil(int rumahAwal, bool[] visited, int nRumah)
-        {
-            visited[rumahAwal] = true;
-            Console.WriteLine(rumahAwal + " ");
-            for (int i = 0; i < vertex[rumahAwal].Count; i++)
-            {
-                int nextr = vertex[rumahAwal][i];
-                if (vertex[nextr] != null)
-                {
-                    hasil(nextr, visited, nRumah);
-                }
-            }
-        }
-
-        static void ck(int nRumah, ref int[] dalam)
-        {
-            bool[] visited = new bool[nRumah + 1];
-            kedalaman(1, visited, nRumah + 1, ref dalam);
-        }
-
-        // Menentukan level
-        static void kedalaman(int rumahAwal, bool[] visited, int nRumah, ref int[] dalam)
-        {
-            visited[rumahAwal] = true;
-            // Console.WriteLine(rumahAwal + " ");
-            // Console.WriteLine("dalam[rumahAwal] : " + dalam[rumahAwal]);
-            for (int i = 0; i < vertex[rumahAwal].Count; i++)
-            {
-                int nextr = vertex[rumahAwal][i];
-                if (vertex[nextr] != null && visited[nextr] == false)
-                {
-                    dalam[nextr] = dalam[rumahAwal] + 1;
-                    Console.WriteLine("dalam[" + nextr + "] : " + dalam[nextr]);
-                    kedalaman(nextr, visited, nRumah, ref dalam);
-                }
-            }
-        }
-
-        static void cari(int rAwal, int nRumah, int rTujuan, ref bool cek, int[] dalam)
-        {
-            bool[] visited = new bool[nRumah + 1];
-            dekati(rAwal, visited, nRumah + 1, ref cek, rTujuan, dalam);
-        }
-
-        static void dekati(int rumahAwal, bool[] visited, int nRumah, ref bool cek, int rTujuan, int[] dalam)
-        {
-            visited[rumahAwal] = true;
-            // Console.WriteLine(rumahAwal + " ");
-            if (rumahAwal == rTujuan)
-            {
-                cek = true;
-                Console.WriteLine("Ketemu");
-            }
-            int i = 0;
-            while (i < vertex[rumahAwal].Count && cek == false && rumahAwal != 1)
-            {
-                int nextr = vertex[rumahAwal][i];
-                if (vertex[nextr] != null && dalam[nextr] < dalam[rumahAwal])
-                {
-                    dekati(nextr, visited, nRumah, ref cek, rTujuan, dalam);
-                }
-                i++;
-            }
-        }
-        /*
-        static void Main()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                vertex[i] = new List<int>();
-            }
-
-            int nRumah = banyakRumah();
-
-            int[] dalam = new int[nRumah + 1];
-
-            for (int i = 0; i < nRumah; i++)
-            {
-                dalam[i] = 0;
-                //Console.WriteLine(dalam[i]);
-            }
-
-
-            addEgde(1, 2);
-            addEgde(1, 7);
-            addEgde(1, 3);
-            addEgde(2, 9);
-            addEgde(5, 4);
-            addEgde(5, 6);
-            addEgde(7, 8);
-            addEgde(3, 5);
-
-
-
-            bool cek = false;
-            // Telusuri(1,nRumah);
-            ck(nRumah, ref dalam);
-
-            cari(9, nRumah, 2, ref cek, dalam);
-            if (cek)
-            {
-                Console.WriteLine("dapat");
-            }
-            else
-            {
-                Console.WriteLine("skip");
-            }
-        }
-        */
-    }
 
     public partial class Form1 : Form
     {
-        Microsoft.Msagl.Drawing.Graph visualGraph; // The graph that MSAGL accepts
+        Microsoft.Msagl.Drawing.Graph graph; // The graph that MSAGL accepts
+        Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer(); // Graph viewer engine
 
         public Form1()
         {
@@ -180,30 +33,194 @@ namespace PetakUmpet
             DialogResult result = openFileGraph.ShowDialog();
 
             if (result == DialogResult.OK) // If the file dialog retrieves a file
-            { 
-                visualGraph = new Microsoft.Msagl.Drawing.Graph("graph"); // Initialize new MSAGL graph
-
-                /*
-                ClassGraph = new List<ClassGraph>(); // Clear leftover Course content
+            {
+                graph = new Microsoft.Msagl.Drawing.Graph("graph"); // Initialize new MSAGL graph                
                 // Read input file
-
 
                 using (StreamReader sr = new StreamReader(openFileGraph.OpenFile()))
                 {
+                    string line = sr.ReadLine();
+                    int nNode = Int32.Parse(line);
+                    for (int i = 0; i < nNode; i++) graph.AddNode((i + 1).ToString());
+
                     while (sr.Peek() >= 0)
                     {
-                        //construct ClassGraph & visualGraph from extern file
+                        line = sr.ReadLine(); // Read file line by line
+                        string[] cur_line = line.Split(' ');
+                        graph.AddEdge(cur_line[0], cur_line[1]);
+                        //construct int & graph from extern file                        
                     }
                 }
 
                 // Re-initialize graph viewer and animation
                 DrawGraph();
-                
+
                 //check query
-                //play animation
-                
-                */
+                //play animation              
+            }
+        }
+
+        private void DrawGraph()
+        {
+            // Bind graph to viewer engine
+            viewer.Graph = graph;
+            // Bind viewer engine to the panel
+            panel_DrawGraph.SuspendLayout();
+            viewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            panel_DrawGraph.Controls.Add(viewer);
+            panel_DrawGraph.ResumeLayout();
+        }
+    }
+
+    //Graph declaration
+    /*
+    class Graph
+    {
+        private List<int>[] edges;
+        private int[] depth;
+        private int n_vertex;
+
+        public Graph(int n)
+        {
+            n_vertex = n;
+            edges = new List<int>[n + 1];
+            depth = new int[n + 1];
+            for (int i = 0; i <= n; i++)
+            {
+                edges[i] = new List<int>();
+                depth[i] = 0;
+            }
+        }
+        ~Graph()
+        {
+            for (int i = 0; i <= n_vertex; i++)
+            {
+                edges[i] = null;
+            }
+            edges = null;
+            depth = null;
+        }
+
+        void addEgde(int origin, int end)
+        {
+            edges[origin].Add(end);
+            edges[end].Add(origin);
+        }
+
+        public void depthNumbering(int v)
+        {
+            bool[] visited = new bool[n_vertex + 1];
+            for (int i = 0; i <= n_vertex; i++)
+            {
+                visited[i] = false;
+            }
+            DFS(v, visited);
+        }
+
+        void DFS(int v, bool[] visited)
+        {
+            visited[v] = true;
+            for (int i = 0; i < edges[v].Count; i++)
+            {
+                int nextr = edges[v][i];
+                if (edges[nextr] != null && !visited[nextr])
+                {
+                    depth[nextr] = depth[v] + 1;
+                    Console.WriteLine("dalam[" + nextr + "] : " + depth[nextr]);
+                    DFS(nextr, visited);
+                }
+            }
+        }
+
+        void checkPosition(int n, int X, int Y)
+        {
+            bool[] visited = new bool[n_vertex + 1];
+            for (int i = 0; i <= n_vertex; i++)
+            {
+                visited[i] = false;
+            }
+            if (n == 1)
+            {
+                if (isDistant(Y, X, visited))
+                {
+                    Console.WriteLine("YA");
+                }
+                else
+                {
+                    Console.WriteLine("TIDAK");
+                }
+            }
+            else if (n == 0)
+            {
+                if (isApproaching(Y, X, visited))
+                {
+                    Console.WriteLine("YA");
+                }
+                else
+                {
+                    Console.WriteLine("TIDAK");
+                }
+            }
+        }
+
+        bool isApproaching(int Y, int X, bool[] visited)
+        {
+            visited[Y] = true;
+            if (Y == 1)
+            {
+                return false;
+            }
+            else
+            {
+                bool cek = false;
+                for (int i = 0; i < edges[Y].Count; i++)
+                {
+                    int nextr = edges[Y][i];
+                    if (edges[nextr] != null && !visited[nextr] && depth[nextr] < depth[Y])
+                    {
+                        if (nextr == X)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            cek = cek || isApproaching(nextr, X, visited);
+                        }
+                    }
+                }
+                return cek;
+            }
+        }
+
+        bool isDistant(int Y, int X, bool[] visited)
+        {
+            visited[Y] = true;
+            if (edges[Y].Count == 1)
+            {
+                return false;
+            }
+            else
+            {
+                bool cek = false;
+                for (int i = 0; i < edges[Y].Count; i++)
+                {
+                    int nextr = edges[Y][i];
+                    if (edges[nextr] != null && !visited[nextr] && depth[nextr] > depth[Y])
+                    {
+                        if (nextr == X)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            cek = cek || isDistant(nextr, X, visited);
+                        }
+                    }
+                }
+                return cek;
             }
         }
     }
+    */
+
 }
