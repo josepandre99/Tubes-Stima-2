@@ -16,6 +16,7 @@ namespace PetakUmpet
     {
         Microsoft.Msagl.Drawing.Graph graph; // The graph that MSAGL accepts
         Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer(); // Graph viewer engine
+        Graph virtualGraph;
 
         public Form1()
         {
@@ -42,23 +43,31 @@ namespace PetakUmpet
                     string line = sr.ReadLine();
                     int nNode = Int32.Parse(line);
                     for (int i = 0; i < nNode; i++) graph.AddNode((i + 1).ToString());
+                    Graph virtualGraph = new Graph(nNode);
 
                     while (sr.Peek() >= 0)
                     {
                         line = sr.ReadLine(); // Read file line by line
                         string[] cur_line = line.Split(' ');
-                        graph.AddEdge(cur_line[0], cur_line[1]);
-                        //construct int & graph from extern file                        
+                        virtualGraph.addEdge(Int32.Parse(cur_line[0]), Int32.Parse(cur_line[1]));
+                        if (!(Int32.Parse(cur_line[0]) > nNode || Int32.Parse(cur_line[1]) > nNode))
+                            graph.AddEdge(cur_line[0], cur_line[1]);               
                     }
+
+                    //if (!virtualGraph.isCircular()) 
+                    DrawGraph();
+                    //else tampilkan pesan kesalahan
+
+                    //load file query
+                    //check query dari GUI
+                    
                 }
 
-                // Re-initialize graph viewer and animation
-                DrawGraph();
-
-                //check query
-                //play animation              
+                
             }
         }
+
+
 
         private void DrawGraph()
         {
@@ -70,10 +79,49 @@ namespace PetakUmpet
             panel_DrawGraph.Controls.Add(viewer);
             panel_DrawGraph.ResumeLayout();
         }
+
+        private void button_loadQuery_Click(object sender, EventArgs e)
+        {
+            // Setting up the file dialog
+            openFileQuery.Filter = "*.txt|*.txt|All files (*.*)|*.*";
+            openFileQuery.InitialDirectory = Directory.GetCurrentDirectory();
+            openFileQuery.Title = "Masukkan file eksternal";
+
+            // Show file dialog
+            DialogResult result_loadQuery = openFileQuery.ShowDialog();
+
+            if (result_loadQuery == DialogResult.OK)
+            {// If the file dialog retrieves a file
+
+                using (StreamReader fq = new StreamReader(openFileQuery.OpenFile()))
+                {
+                    string queryLine = fq.ReadLine();
+                    int nQuery = Int32.Parse(queryLine);
+                    int count = 0;
+
+                    while (count < nQuery)
+                    {
+                        queryLine = fq.ReadLine(); // Read file line by line
+                        string[] cur_queryLine = queryLine.Split(' ');
+
+                        virtualGraph.depthNumbering(1);
+                        if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
+                        {
+                            //YA
+                            //playAnimation
+                        }
+                        else
+                        {
+                            //TIDAK
+                        }
+                    }
+                }
+            }
+        }
     }
 
     //Graph declaration
-    /*
+
     class Graph
     {
         private List<int>[] edges;
@@ -101,7 +149,7 @@ namespace PetakUmpet
             depth = null;
         }
 
-        void addEgde(int origin, int end)
+        public void addEdge(int origin, int end)
         {
             edges[origin].Add(end);
             edges[end].Add(origin);
@@ -132,7 +180,7 @@ namespace PetakUmpet
             }
         }
 
-        void checkPosition(int n, int X, int Y)
+        public bool checkPosition(int n, int x, int y)
         {
             bool[] visited = new bool[n_vertex + 1];
             for (int i = 0; i <= n_vertex; i++)
@@ -141,86 +189,72 @@ namespace PetakUmpet
             }
             if (n == 1)
             {
-                if (isDistant(Y, X, visited))
+                return (isDistant(y, x, visited));
+
+            }
+            else
+            {
+                return (isApproaching(y, x, visited));
+            }
+        }
+
+            bool isApproaching(int Y, int X, bool[] visited)
+            {
+                visited[Y] = true;
+                if (Y == 1)
                 {
-                    Console.WriteLine("YA");
+                    return false;
                 }
                 else
                 {
-                    Console.WriteLine("TIDAK");
+                    bool cek = false;
+                    for (int i = 0; i < edges[Y].Count; i++)
+                    {
+                        int nextr = edges[Y][i];
+                        if (edges[nextr] != null && !visited[nextr] && depth[nextr] < depth[Y])
+                        {
+                            if (nextr == X)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                cek = cek || isApproaching(nextr, X, visited);
+                            }
+                        }
+                    }
+                    return cek;
                 }
             }
-            else if (n == 0)
+
+            bool isDistant(int Y, int X, bool[] visited)
             {
-                if (isApproaching(Y, X, visited))
+                visited[Y] = true;
+                if (edges[Y].Count == 1)
                 {
-                    Console.WriteLine("YA");
+                    return false;
                 }
                 else
                 {
-                    Console.WriteLine("TIDAK");
+                    bool cek = false;
+                    for (int i = 0; i < edges[Y].Count; i++)
+                    {
+                        int nextr = edges[Y][i];
+                        if (edges[nextr] != null && !visited[nextr] && depth[nextr] > depth[Y])
+                        {
+                            if (nextr == X)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                cek = cek || isDistant(nextr, X, visited);
+                            }
+                        }
+                    }
+                    return cek;
                 }
             }
         }
 
-        bool isApproaching(int Y, int X, bool[] visited)
-        {
-            visited[Y] = true;
-            if (Y == 1)
-            {
-                return false;
-            }
-            else
-            {
-                bool cek = false;
-                for (int i = 0; i < edges[Y].Count; i++)
-                {
-                    int nextr = edges[Y][i];
-                    if (edges[nextr] != null && !visited[nextr] && depth[nextr] < depth[Y])
-                    {
-                        if (nextr == X)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            cek = cek || isApproaching(nextr, X, visited);
-                        }
-                    }
-                }
-                return cek;
-            }
-        }
-
-        bool isDistant(int Y, int X, bool[] visited)
-        {
-            visited[Y] = true;
-            if (edges[Y].Count == 1)
-            {
-                return false;
-            }
-            else
-            {
-                bool cek = false;
-                for (int i = 0; i < edges[Y].Count; i++)
-                {
-                    int nextr = edges[Y][i];
-                    if (edges[nextr] != null && !visited[nextr] && depth[nextr] > depth[Y])
-                    {
-                        if (nextr == X)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            cek = cek || isDistant(nextr, X, visited);
-                        }
-                    }
-                }
-                return cek;
-            }
-        }
     }
-    */
-
-}
