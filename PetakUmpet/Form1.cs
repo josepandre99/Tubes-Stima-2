@@ -17,6 +17,8 @@ namespace PetakUmpet
         Microsoft.Msagl.Drawing.Graph graph; // The graph that MSAGL accepts
         Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer(); // Graph viewer engine
         Graph virtualGraph;
+        List<string> visitedNode;
+        int count;
 
         public Form1()
         {
@@ -43,7 +45,7 @@ namespace PetakUmpet
                     string line = sr.ReadLine();
                     int nNode = Int32.Parse(line);
                     for (int i = 0; i < nNode; i++) graph.AddNode((i + 1).ToString());
-                    Graph virtualGraph = new Graph(nNode);
+                    virtualGraph = new Graph(nNode);
 
                     while (sr.Peek() >= 0)
                     {
@@ -54,23 +56,11 @@ namespace PetakUmpet
                             graph.AddEdge(cur_line[0], cur_line[1]);               
                     }
 
-                    //if (virtualGraph.isCyclic())
-                    //{
+                    //if (virtualGraph.isCyclic()) CircularError(); else
                         DrawGraph();
-                    //}
-                    
-                    //else tampilkan pesan kesalahan
-
-                    //load file query
-                    //check query dari GUI
-                    
-                }
-
-                
+                } 
             }
         }
-
-
 
         private void DrawGraph()
         {
@@ -81,6 +71,11 @@ namespace PetakUmpet
             viewer.Dock = System.Windows.Forms.DockStyle.Fill;
             panel_DrawGraph.Controls.Add(viewer);
             panel_DrawGraph.ResumeLayout();
+        }
+
+        private void CircularError()
+        {
+            //display Error Message
         }
 
         private void button_loadQuery_Click(object sender, EventArgs e)
@@ -100,18 +95,20 @@ namespace PetakUmpet
                 {
                     string queryLine = fq.ReadLine();
                     int nQuery = Int32.Parse(queryLine);
-                    int count = 0;
+                    count = 0;
 
                     while (count < nQuery)
                     {
                         queryLine = fq.ReadLine(); // Read file line by line
                         string[] cur_queryLine = queryLine.Split(' ');
+                        visitedNode = new List<string>();
 
                         virtualGraph.depthNumbering(1);
                         if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
                         {
                             //YA
-                            //playAnimation
+                            foreach(string visited in visitedNode)
+                            graph.FindNode(visited).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
                         }
                         else
                         {
@@ -120,6 +117,11 @@ namespace PetakUmpet
                     }
                 }
             }
+        }
+
+        private void button_nextQuery_Click(object sender, EventArgs e)
+        {
+            count++;
         }
     }
 

@@ -79,6 +79,7 @@
             this.button_nextQuery.TabIndex = 5;
             this.button_nextQuery.Text = "Next Query";
             this.button_nextQuery.UseVisualStyleBackColor = true;
+            this.button_nextQuery.Click += new System.EventHandler(this.button_nextQuery_Click);
             // 
             // Form1
             // 
