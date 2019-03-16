@@ -54,8 +54,11 @@ namespace PetakUmpet
                             graph.AddEdge(cur_line[0], cur_line[1]);               
                     }
 
-                    //if (!virtualGraph.isCircular()) 
-                    DrawGraph();
+                    //if (virtualGraph.isCyclic())
+                    //{
+                        DrawGraph();
+                    //}
+                    
                     //else tampilkan pesan kesalahan
 
                     //load file query
@@ -255,6 +258,49 @@ namespace PetakUmpet
                     return cek;
                 }
             }
+
+        public bool isCyclicUtil(int i, bool[] visited, bool[] recStack)
+        {
+            if (recStack[i])
+            {
+                return true;
+            }
+
+            if (visited[i])
+            {
+                return false;
+            }
+                
+            visited[i] = true;
+
+            recStack[i] = true;
+            List<int> children = edges[i];
+
+            for (int j = 0; j < edges[i].Count; j++)
+            {
+                if (isCyclicUtil(edges[i][j], visited, recStack))
+                    return true;
+            }
+
+            recStack[i] = false;
+
+            return false;
+        }
+
+        public bool isCyclic()
+        {
+            bool[] visited = new bool[n_vertex + 1];
+            bool[] recStack = new bool[n_vertex + 1];
+
+            for (int i = 0; i < n_vertex; i++)
+            {
+                if (isCyclicUtil(i, visited, recStack))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
     }
