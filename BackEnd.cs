@@ -9,12 +9,14 @@ namespace BackEnd
         private List<int>[] edges;
         private int[] depth;
         private int n_vertex;
+        public List<int> path;
 
         public Graph(int n)
         {
             n_vertex = n;
             edges = new List<int>[n + 1];
             depth = new int[n + 1];
+            path = new List<int>();
             for (int i = 0; i <= n; i++)
             {
                 edges[i] = new List<int>();
@@ -29,6 +31,7 @@ namespace BackEnd
             }
             edges = null;
             depth = null;
+            path = null;
         }
 
         void addEgde(int origin, int end)
@@ -68,6 +71,8 @@ namespace BackEnd
 
         void checkPosition(int n, int X, int Y)
         {
+            path.Clear();
+            path.Add(Y);
             bool[] visited = new bool[n_vertex + 1];
             for (int i = 0; i <= n_vertex; i++)
             {
@@ -97,8 +102,9 @@ namespace BackEnd
             }
         }
 
-        bool isApproaching(int Y, int X, bool[] visited)
+       bool isApproaching(int Y, int X, bool[] visited)
         {
+
             visited[Y] = true;
             if (Y == 1)
             {
@@ -107,11 +113,13 @@ namespace BackEnd
             else
             {
                 bool cek = false;
-                for (int i = 0; i < edges[Y].Count; i++)
+                int i = 0;
+                while (i < edges[Y].Count && !cek)
                 {
                     int nextr = edges[Y][i];
                     if (edges[nextr] != null && !visited[nextr] && depth[nextr] < depth[Y])
                     {
+                        path.Add(nextr);
                         if (nextr == X)
                         {
                             return true;
@@ -120,7 +128,13 @@ namespace BackEnd
                         {
                             cek = cek || isApproaching(nextr, X, visited);
                         }
+                        if (!cek)
+                        {
+                            path.Remove(nextr);
+                        }
                     }
+                    
+                    i++;                    
                 }
                 return cek;
             }
@@ -136,11 +150,13 @@ namespace BackEnd
             else
             {
                 bool cek = false;
-                for (int i = 0; i < edges[Y].Count; i++)
+                int i = 0;
+                while(i < edges[Y].Count && !cek)
                 {
-                    int nextr = edges[Y][i];
+                    int nextr = edges[Y][i];                    
                     if (edges[nextr] != null && !visited[nextr] && depth[nextr] > depth[Y])
                     {
+                        path.Add(nextr);
                         if (nextr == X)
                         {
                             return true;
@@ -149,8 +165,13 @@ namespace BackEnd
                         {
                             cek = cek || isDistant(nextr, X, visited);
                         }
+                        if (!cek)
+                        {
+                            path.Remove(nextr);
+                        }
                     }
-                }
+                    i++;
+                }                
                 return cek;
             }
         }
@@ -159,18 +180,13 @@ namespace BackEnd
         {
             Graph graph = new Graph(3);
             graph.addEgde(1, 2);
-            graph.addEgde(2, 3);
-            graph.addEgde(3, 1);
-
-            /*
             graph.addEgde(1, 7);
             graph.addEgde(1, 3);
-            graph.addEgde(2, 9);
+            graph.addEgde(4, 9);
             graph.addEgde(5, 4);
             graph.addEgde(5, 6);
             graph.addEgde(7, 8);
             graph.addEgde(3, 5);
-            */
             try
             {
                 graph.depthNumbering(1);
@@ -179,7 +195,11 @@ namespace BackEnd
             {
                 Console.WriteLine(ex);
             }
-            //graph.checkPosition(1, 6, 5);
+            graph.checkPosition(1,9, 3);
+            foreach(int n in graph.path)
+            {
+                Console.WriteLine(n);
+            }
 
             int a = Console.Read();
         }
