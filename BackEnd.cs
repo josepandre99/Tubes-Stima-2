@@ -44,20 +44,24 @@ namespace BackEnd
             {
                 visited[i] = false;
             }
-            DFS(v, visited);
+            DFS(v, 0, visited);
         }
 
-        void DFS(int v, bool[] visited)
+        void DFS(int v, int prevr, bool[] visited)
         {
             visited[v] = true;
             for (int i = 0; i < edges[v].Count; i++)
             {
                 int nextr = edges[v][i];
-                if (edges[nextr] != null && !visited[nextr])
+                if (nextr != prevr && visited[nextr])
+                {
+                    throw new Exception();
+                }
+            if (edges[nextr] != null && !visited[nextr])
                 {
                     depth[nextr] = depth[v] + 1;
                     Console.WriteLine("dalam[" + nextr + "] : " + depth[nextr]);
-                    DFS(nextr, visited);
+                    DFS(nextr, v, visited);
                 }
             }
         }
@@ -153,8 +157,12 @@ namespace BackEnd
 
         static void Main()
         {
-            Graph graph = new Graph(9);
+            Graph graph = new Graph(3);
             graph.addEgde(1, 2);
+            graph.addEgde(2, 3);
+            graph.addEgde(3, 1);
+
+            /*
             graph.addEgde(1, 7);
             graph.addEgde(1, 3);
             graph.addEgde(2, 9);
@@ -162,9 +170,16 @@ namespace BackEnd
             graph.addEgde(5, 6);
             graph.addEgde(7, 8);
             graph.addEgde(3, 5);
-            graph.depthNumbering(1);
-
-            graph.checkPosition(1,9,1);
+            */
+            try
+            {
+                graph.depthNumbering(1);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            //graph.checkPosition(1, 6, 5);
 
             int a = Console.Read();
         }
