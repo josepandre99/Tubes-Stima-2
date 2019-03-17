@@ -12,6 +12,7 @@ using System.Windows.Forms;
 namespace PetakUmpet
 {
 
+
     public partial class Form1 : Form
     {
         Microsoft.Msagl.Drawing.Graph graph; // The graph that MSAGL accepts
@@ -21,6 +22,7 @@ namespace PetakUmpet
         int count, nNode, nQuery;
         string queryLine;
         StreamReader fq;
+        bool graphLoaded = false;
 
         public Form1()
         {
@@ -34,6 +36,11 @@ namespace PetakUmpet
             openFileGraph.InitialDirectory = Directory.GetCurrentDirectory();
             openFileGraph.Title = "Masukkan file eksternal";
 
+            //Clear listBox1
+            listBox1.Items.Clear();
+            //Setting Font in listBox1
+            listBox1.Font = new Font(Font.FontFamily, 20);
+
             // Show file dialog
             DialogResult result = openFileGraph.ShowDialog();
 
@@ -45,28 +52,37 @@ namespace PetakUmpet
                 using (StreamReader sr = new StreamReader(openFileGraph.OpenFile()))
                 {
                     string line = sr.ReadLine();
-                    nNode = Int32.Parse(line);
-                    for (int i = 0; i < nNode; i++) graph.AddNode((i + 1).ToString());
-                    virtualGraph = new Graph(nNode);
-
-                    while (sr.Peek() >= 0)
+                    if (line == null || line == "0")
                     {
-                        line = sr.ReadLine(); // Read file line by line
-                        string[] cur_line = line.Split(' ');
-                        virtualGraph.addEdge(Int32.Parse(cur_line[0]), Int32.Parse(cur_line[1]));
-                        if (!(Int32.Parse(cur_line[0]) > nNode || Int32.Parse(cur_line[1]) > nNode))
-                            graph.AddEdge(cur_line[0], cur_line[1]);               
+                        MessageBox.Show("File Kosong", "Warning!!!");
                     }
-
-                    try
+                    else
                     {
-                        virtualGraph.depthNumbering(1);
-                        DrawGraph();
+                        graphLoaded = true;
+                        nNode = Int32.Parse(line);
+                        for (int i = 0; i < nNode; i++) graph.AddNode((i + 1).ToString());
+                        virtualGraph = new Graph(nNode);
+
+                        while (sr.Peek() >= 0)
+                        {
+                            line = sr.ReadLine(); // Read file line by line
+                            string[] cur_line = line.Split(' ');
+                            virtualGraph.addEdge(Int32.Parse(cur_line[0]), Int32.Parse(cur_line[1]));
+                            if (!(Int32.Parse(cur_line[0]) > nNode || Int32.Parse(cur_line[1]) > nNode))
+                                graph.AddEdge(cur_line[0], cur_line[1]);
+                        }
+
+                        try
+                        {
+                            virtualGraph.depthNumbering(1);
+                            DrawGraph();
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("CIRCULAR CUY");
+                            MessageBox.Show("Graf Siklik", "Warning!!!");
+                        }
                     }
-                    catch (Exception) {
-                        Console.WriteLine("CIRCULAR CUY");
-                    }
-                    
                 } 
             }
         }
@@ -103,12 +119,20 @@ namespace PetakUmpet
 
         public void button_nextQuery_Click(object sender, EventArgs e)
         {
-            if (count < nQuery)
+            if (!graphLoaded)
+            {
+                MessageBox.Show("Graf Kosong", "Warning!!!");
+            }
+            else if(count < nQuery)
             {
                     for (int i = 0; i < nNode; i++) graph.FindNode((i + 1).ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
                     queryLine = fq.ReadLine(); // Read file line by line
                     string[] cur_queryLine = queryLine.Split(' ');
                     visitedNode = new List<string>();
+
+                    //Show Query
+                    listBox2.Items.Clear();
+                    listBox2.Items.Add(queryLine);
 
                     //virtualGraph.depthNumbering(1);
                     if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
@@ -116,14 +140,21 @@ namespace PetakUmpet
                         foreach (string visited in visitedNode)
                             graph.FindNode(visited).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
                         Console.WriteLine("YA");
+                        listBox1.Items.Clear();
+                        listBox1.Items.Add("YA");
                     }
                     else
                     {
                         Console.WriteLine("TIDAK");
-                        //TIDAK
+                        listBox1.Items.Clear();
+                        listBox1.Items.Add("TIDAK");
                     }
                     DrawGraph();
 
+            }
+            else
+            {
+                MessageBox.Show("Query Kosong", "Warning!!!");
             }
             count++;
         }
@@ -157,7 +188,7 @@ namespace PetakUmpet
                 edges = null;
                 depth = null;
             }
-
+            
             public void addEdge(int origin, int end)
             {
                 edges[origin].Add(end);
@@ -283,51 +314,7 @@ namespace PetakUmpet
                     }
                     return cek;
                 }
-            }
-
-            public bool isCyclicUtil(int i, bool[] visited, bool[] recStack)
-            {
-                if (recStack[i])
-                {
-                    return true;
-                }
-
-                if (visited[i])
-                {
-                    return false;
-                }
-
-                visited[i] = true;
-
-                recStack[i] = true;
-                List<int> children = edges[i];
-
-                for (int j = 0; j < edges[i].Count; j++)
-                {
-                    if (isCyclicUtil(edges[i][j], visited, recStack))
-                        return true;
-                }
-
-                recStack[i] = false;
-
-                return false;
-            }
-
-            public bool isCyclic()
-            {
-                bool[] visited = new bool[n_vertex + 1];
-                bool[] recStack = new bool[n_vertex + 1];
-
-                for (int i = 0; i < n_vertex; i++)
-                {
-                    if (isCyclicUtil(i, visited, recStack))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
+            }    
         }
     }
 
