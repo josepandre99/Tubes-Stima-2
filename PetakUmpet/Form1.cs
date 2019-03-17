@@ -17,8 +17,10 @@ namespace PetakUmpet
         Microsoft.Msagl.Drawing.Graph graph; // The graph that MSAGL accepts
         Microsoft.Msagl.GraphViewerGdi.GViewer viewer = new Microsoft.Msagl.GraphViewerGdi.GViewer(); // Graph viewer engine
         Graph virtualGraph;
-        List<string> visitedNode;
-        int count;
+        static List<string> visitedNode;
+        int count, nNode, nQuery;
+        string queryLine;
+        StreamReader fq;
 
         public Form1()
         {
@@ -43,7 +45,7 @@ namespace PetakUmpet
                 using (StreamReader sr = new StreamReader(openFileGraph.OpenFile()))
                 {
                     string line = sr.ReadLine();
-                    int nNode = Int32.Parse(line);
+                    nNode = Int32.Parse(line);
                     for (int i = 0; i < nNode; i++) graph.AddNode((i + 1).ToString());
                     virtualGraph = new Graph(nNode);
 
@@ -56,8 +58,15 @@ namespace PetakUmpet
                             graph.AddEdge(cur_line[0], cur_line[1]);               
                     }
 
-                    //if (virtualGraph.isCyclic()) CircularError(); else
+                    try
+                    {
+                        virtualGraph.depthNumbering(1);
                         DrawGraph();
+                    }
+                    catch (Exception) {
+                        Console.WriteLine("CIRCULAR CUY");
+                    }
+                    
                 } 
             }
         }
@@ -73,12 +82,7 @@ namespace PetakUmpet
             panel_DrawGraph.ResumeLayout();
         }
 
-        private void CircularError()
-        {
-            //display Error Message
-        }
-
-        private void button_loadQuery_Click(object sender, EventArgs e)
+        public void button_loadQuery_Click(object sender, EventArgs e)
         {
             // Setting up the file dialog
             openFileQuery.Filter = "*.txt|*.txt|All files (*.*)|*.*";
@@ -90,118 +94,124 @@ namespace PetakUmpet
 
             if (result_loadQuery == DialogResult.OK)
             {// If the file dialog retrieves a file
+                fq = new StreamReader(openFileQuery.OpenFile());
+                queryLine = fq.ReadLine();
+                nQuery = Int32.Parse(queryLine);
+                count = 0;
+            }
+        }
 
-                using (StreamReader fq = new StreamReader(openFileQuery.OpenFile()))
-                {
-                    string queryLine = fq.ReadLine();
-                    int nQuery = Int32.Parse(queryLine);
-                    count = 0;
+        public void button_nextQuery_Click(object sender, EventArgs e)
+        {
+            if (count < nQuery)
+            {
+                    for (int i = 0; i < nNode; i++) graph.FindNode((i + 1).ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                    queryLine = fq.ReadLine(); // Read file line by line
+                    string[] cur_queryLine = queryLine.Split(' ');
+                    visitedNode = new List<string>();
 
-                    while (count < nQuery)
+                    //virtualGraph.depthNumbering(1);
+                    if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
                     {
-                        queryLine = fq.ReadLine(); // Read file line by line
-                        string[] cur_queryLine = queryLine.Split(' ');
-                        visitedNode = new List<string>();
-
-                        virtualGraph.depthNumbering(1);
-                        if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
-                        {
-                            //YA
-                            foreach(string visited in visitedNode)
+                        foreach (string visited in visitedNode)
                             graph.FindNode(visited).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
-                        }
-                        else
-                        {
-                            //TIDAK
-                        }
+                        Console.WriteLine("YA");
+                    }
+                    else
+                    {
+                        Console.WriteLine("TIDAK");
+                        //TIDAK
+                    }
+                    DrawGraph();
+
+            }
+            count++;
+        }
+
+
+        //Graph declaration
+
+        class Graph
+        {
+            private List<int>[] edges;
+            private int[] depth;
+            private int n_vertex;
+
+            public Graph(int n)
+            {
+                n_vertex = n;
+                edges = new List<int>[n + 1];
+                depth = new int[n + 1];
+                for (int i = 0; i <= n; i++)
+                {
+                    edges[i] = new List<int>();
+                    depth[i] = 0;
+                }
+            }
+            ~Graph()
+            {
+                for (int i = 0; i <= n_vertex; i++)
+                {
+                    edges[i] = null;
+                }
+                edges = null;
+                depth = null;
+            }
+
+            public void addEdge(int origin, int end)
+            {
+                edges[origin].Add(end);
+                edges[end].Add(origin);
+            }
+
+            public void depthNumbering(int v)
+            {
+                bool[] visited = new bool[n_vertex + 1];
+                for (int i = 0; i <= n_vertex; i++)
+                {
+                    visited[i] = false;
+                }
+                DFS(v, 0, visited);
+            }
+
+            void DFS(int v, int prevr, bool[] visited)
+            {
+                visited[v] = true;
+                for (int i = 0; i < edges[v].Count; i++)
+                {
+                    int nextr = edges[v][i];
+                    if (nextr != prevr && visited[nextr])
+                    {
+                        throw new Exception();
+                    }
+                    if (edges[nextr] != null && !visited[nextr])
+                    {
+                        depth[nextr] = depth[v] + 1;
+                        Console.WriteLine("dalam[" + nextr + "] : " + depth[nextr]);
+                        DFS(nextr, v, visited);
                     }
                 }
             }
-        }
 
-        private void button_nextQuery_Click(object sender, EventArgs e)
-        {
-            count++;
-        }
-    }
-
-    //Graph declaration
-
-    class Graph
-    {
-        private List<int>[] edges;
-        private int[] depth;
-        private int n_vertex;
-
-        public Graph(int n)
-        {
-            n_vertex = n;
-            edges = new List<int>[n + 1];
-            depth = new int[n + 1];
-            for (int i = 0; i <= n; i++)
+            public bool checkPosition(int n, int x, int y)
             {
-                edges[i] = new List<int>();
-                depth[i] = 0;
-            }
-        }
-        ~Graph()
-        {
-            for (int i = 0; i <= n_vertex; i++)
-            {
-                edges[i] = null;
-            }
-            edges = null;
-            depth = null;
-        }
-
-        public void addEdge(int origin, int end)
-        {
-            edges[origin].Add(end);
-            edges[end].Add(origin);
-        }
-
-        public void depthNumbering(int v)
-        {
-            bool[] visited = new bool[n_vertex + 1];
-            for (int i = 0; i <= n_vertex; i++)
-            {
-                visited[i] = false;
-            }
-            DFS(v, visited);
-        }
-
-        void DFS(int v, bool[] visited)
-        {
-            visited[v] = true;
-            for (int i = 0; i < edges[v].Count; i++)
-            {
-                int nextr = edges[v][i];
-                if (edges[nextr] != null && !visited[nextr])
+                visitedNode.Clear();
+                visitedNode.Add(y.ToString());
+                bool[] visited = new bool[n_vertex + 1];
+                for (int i = 0; i <= n_vertex; i++)
                 {
-                    depth[nextr] = depth[v] + 1;
-                    Console.WriteLine("dalam[" + nextr + "] : " + depth[nextr]);
-                    DFS(nextr, visited);
+                    visited[i] = false;
+                }
+                if (n == 1)
+                {
+                    return (isDistant(y, x, visited));
+
+                }
+                else
+                {
+                    return (isApproaching(y, x, visited));
                 }
             }
-        }
-
-        public bool checkPosition(int n, int x, int y)
-        {
-            bool[] visited = new bool[n_vertex + 1];
-            for (int i = 0; i <= n_vertex; i++)
-            {
-                visited[i] = false;
-            }
-            if (n == 1)
-            {
-                return (isDistant(y, x, visited));
-
-            }
-            else
-            {
-                return (isApproaching(y, x, visited));
-            }
-        }
 
             bool isApproaching(int Y, int X, bool[] visited)
             {
@@ -213,11 +223,13 @@ namespace PetakUmpet
                 else
                 {
                     bool cek = false;
-                    for (int i = 0; i < edges[Y].Count; i++)
+                    int i = 0;
+                    while (i < edges[Y].Count && !cek)
                     {
                         int nextr = edges[Y][i];
                         if (edges[nextr] != null && !visited[nextr] && depth[nextr] < depth[Y])
                         {
+                            visitedNode.Add(nextr.ToString());
                             if (nextr == X)
                             {
                                 return true;
@@ -226,7 +238,12 @@ namespace PetakUmpet
                             {
                                 cek = cek || isApproaching(nextr, X, visited);
                             }
+                            if (!cek)
+                            {
+                                visitedNode.Remove(nextr.ToString());
+                            }
                         }
+                        i++;
                     }
                     return cek;
                 }
@@ -242,11 +259,13 @@ namespace PetakUmpet
                 else
                 {
                     bool cek = false;
-                    for (int i = 0; i < edges[Y].Count; i++)
+                    int i = 0;
+                    while (i < edges[Y].Count && !cek)
                     {
                         int nextr = edges[Y][i];
                         if (edges[nextr] != null && !visited[nextr] && depth[nextr] > depth[Y])
                         {
+                            visitedNode.Add(nextr.ToString());
                             if (nextr == X)
                             {
                                 return true;
@@ -255,55 +274,61 @@ namespace PetakUmpet
                             {
                                 cek = cek || isDistant(nextr, X, visited);
                             }
+                            if (!cek)
+                            {
+                                visitedNode.Remove(nextr.ToString());
+                            }
                         }
+                        i++;
                     }
                     return cek;
                 }
             }
 
-        public bool isCyclicUtil(int i, bool[] visited, bool[] recStack)
-        {
-            if (recStack[i])
+            public bool isCyclicUtil(int i, bool[] visited, bool[] recStack)
             {
-                return true;
-            }
-
-            if (visited[i])
-            {
-                return false;
-            }
-                
-            visited[i] = true;
-
-            recStack[i] = true;
-            List<int> children = edges[i];
-
-            for (int j = 0; j < edges[i].Count; j++)
-            {
-                if (isCyclicUtil(edges[i][j], visited, recStack))
-                    return true;
-            }
-
-            recStack[i] = false;
-
-            return false;
-        }
-
-        public bool isCyclic()
-        {
-            bool[] visited = new bool[n_vertex + 1];
-            bool[] recStack = new bool[n_vertex + 1];
-
-            for (int i = 0; i < n_vertex; i++)
-            {
-                if (isCyclicUtil(i, visited, recStack))
+                if (recStack[i])
                 {
                     return true;
                 }
+
+                if (visited[i])
+                {
+                    return false;
+                }
+
+                visited[i] = true;
+
+                recStack[i] = true;
+                List<int> children = edges[i];
+
+                for (int j = 0; j < edges[i].Count; j++)
+                {
+                    if (isCyclicUtil(edges[i][j], visited, recStack))
+                        return true;
+                }
+
+                recStack[i] = false;
+
+                return false;
             }
 
-            return false;
+            public bool isCyclic()
+            {
+                bool[] visited = new bool[n_vertex + 1];
+                bool[] recStack = new bool[n_vertex + 1];
+
+                for (int i = 0; i < n_vertex; i++)
+                {
+                    if (isCyclicUtil(i, visited, recStack))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
     }
 
-    }
+}
