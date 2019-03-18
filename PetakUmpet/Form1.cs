@@ -20,7 +20,7 @@ namespace PetakUmpet
         Graph virtualGraph;
         static List<string> visitedNode;
         int count, nNode, nQuery;
-        string queryLine;
+        string queryLine, q;
         StreamReader fq;
         bool graphLoaded = false;
 
@@ -115,6 +115,61 @@ namespace PetakUmpet
                 nQuery = Int32.Parse(queryLine);
                 count = 0;
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (!graphLoaded)
+            {
+                MessageBox.Show("Graf Kosong", "Warning!!!");
+            }
+            else
+            {
+                for (int i = 0; i < nNode; i++) graph.FindNode((i + 1).ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+                
+                string[] cur_queryLine = q.Split(' ');
+                visitedNode = new List<string>();
+
+                //Show Query
+                //listBox3.Items.Clear();
+                //listBox3.Items.Add(queryLine);
+
+                //virtualGraph.depthNumbering(1);
+                try
+                {
+                    if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
+                    {
+                        foreach (string visited in visitedNode)
+                            graph.FindNode(visited).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
+                        Console.WriteLine("YA");
+                        listBox3.Items.Clear();
+                        listBox3.Items.Add("YA");
+                    }
+                    else
+                    {
+                        Console.WriteLine("TIDAK");
+                        listBox3.Items.Clear();
+                        listBox3.Items.Add("TIDAK");
+                    }
+                    DrawGraph();
+                }
+                catch(Exception)
+                {
+                    MessageBox.Show("Query salah", "Warning!!!");
+                }
+
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            q = textBox1.Text;
+            Console.WriteLine(q);
+        }
+
+        private void panel_DrawGraph_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         public void button_nextQuery_Click(object sender, EventArgs e)
