@@ -221,6 +221,7 @@ namespace PetakUmpet
         {
             private List<int>[] edges;
             private int[] depth;
+            private bool[] visited;
             private int n_vertex;
 
             public Graph(int n)
@@ -228,10 +229,12 @@ namespace PetakUmpet
                 n_vertex = n;
                 edges = new List<int>[n + 1];
                 depth = new int[n + 1];
+                visited = new int[n+1];
                 for (int i = 0; i <= n; i++)
                 {
                     edges[i] = new List<int>();
                     depth[i] = 0;
+                    visited[i] = false;
                 }
             }
             ~Graph()
@@ -241,6 +244,7 @@ namespace PetakUmpet
                     edges[i] = null;
                 }
                 edges = null;
+                visited = null;
                 depth = null;
             }
             
@@ -252,15 +256,10 @@ namespace PetakUmpet
 
             public void depthNumbering(int v)
             {
-                bool[] visited = new bool[n_vertex + 1];
-                for (int i = 0; i <= n_vertex; i++)
-                {
-                    visited[i] = false;
-                }
-                DFS(v, 0, visited);
+                DFS(v, 0);
             }
 
-            void DFS(int v, int prevr, bool[] visited)
+            void DFS(int v, int prevr)
             {
                 visited[v] = true;
                 for (int i = 0; i < edges[v].Count; i++)
@@ -274,7 +273,7 @@ namespace PetakUmpet
                     {
                         depth[nextr] = depth[v] + 1;
                         Console.WriteLine("dalam[" + nextr + "] : " + depth[nextr]);
-                        DFS(nextr, v, visited);
+                        DFS(nextr, v);
                     }
                 }
             }
@@ -283,23 +282,22 @@ namespace PetakUmpet
             {
                 visitedNode.Clear();
                 visitedNode.Add(y.ToString());
-                bool[] visited = new bool[n_vertex + 1];
                 for (int i = 0; i <= n_vertex; i++)
                 {
                     visited[i] = false;
                 }
                 if (n == 1)
                 {
-                    return (isDistant(y, x, visited));
+                    return (isDistant(y, x));
 
                 }
                 else
                 {
-                    return (isApproaching(y, x, visited));
+                    return (isApproaching(y, x));
                 }
             }
 
-            bool isApproaching(int Y, int X, bool[] visited)
+            bool isApproaching(int Y, int X)
             {
                 visited[Y] = true;
                 if (Y == 1)
@@ -335,7 +333,7 @@ namespace PetakUmpet
                 }
             }
 
-            bool isDistant(int Y, int X, bool[] visited)
+            bool isDistant(int Y, int X)
             {
                 visited[Y] = true;
                 if (edges[Y].Count == 1)
