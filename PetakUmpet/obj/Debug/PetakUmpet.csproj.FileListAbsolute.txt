@@ -49,3 +49,20 @@ D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmp
 D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csproj.CopyComplete
 D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.exe
 D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.pdb
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\PetakUmpet.exe.config
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\PetakUmpet.exe
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\PetakUmpet.pdb
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.dll
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.Drawing.dll
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.GraphViewerGdi.dll
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.xml
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.Drawing.xml
+E:\C#\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.GraphViewerGdi.xml
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csprojAssemblyReference.cache
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.Form1.resources
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.Properties.Resources.resources
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csproj.GenerateResource.cache
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csproj.CoreCompileInputs.cache
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csproj.CopyComplete
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.exe
+E:\C#\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.pdb

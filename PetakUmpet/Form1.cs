@@ -31,6 +31,7 @@ namespace PetakUmpet
 
         private void button_LoadFile_Click(object sender, EventArgs e)
         {
+
             // Setting up the file dialog
             openFileGraph.Filter = "*.txt|*.txt|All files (*.*)|*.*";
             openFileGraph.InitialDirectory = Directory.GetCurrentDirectory();
@@ -288,18 +289,25 @@ namespace PetakUmpet
             {
                 visitedNode.Clear();
                 visitedNode.Add(y.ToString());
-                for (int i = 0; i <= n_vertex; i++)
+                if (y == x)
                 {
-                    visited[i] = false;
-                }
-                if (n == 1)
-                {
-                    return (isDistant(y, x));
-
+                    return true;
                 }
                 else
                 {
-                    return (isApproaching(y, x));
+                    for (int i = 0; i <= n_vertex; i++)
+                    {
+                        visited[i] = false;
+                    }
+                    if (n == 1)
+                    {
+                        return (isDistant(y, x));
+
+                    }
+                    else
+                    {
+                        return (isApproaching(y, x));
+                    }
                 }
             }
 
