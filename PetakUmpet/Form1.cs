@@ -46,7 +46,7 @@ namespace PetakUmpet
 
             if (result == DialogResult.OK) // If the file dialog retrieves a file
             {
-                graph = new Microsoft.Msagl.Drawing.Graph("graph"); // Initialize new MSAGL graph                
+                graph = new Microsoft.Msagl.Drawing.Graph("graph"); // Initialize new MSAGL graph
                 // Read input file
 
                 using (StreamReader sr = new StreamReader(openFileGraph.OpenFile()))
@@ -83,7 +83,7 @@ namespace PetakUmpet
                             MessageBox.Show("Graf Siklik", "Warning!!!");
                         }
                     }
-                } 
+                }
             }
         }
 
@@ -117,9 +117,7 @@ namespace PetakUmpet
             }
         }
 
-
-
-        private void button1_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
             if (!graphLoaded)
             {
@@ -155,19 +153,15 @@ namespace PetakUmpet
                     }
                     DrawGraph();
                 }
-                catch (Exception)
+                catch(Exception)
                 {
                     MessageBox.Show("Query salah", "Warning!!!");
                 }
+
             }
         }
 
-        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged_1(object sender, EventArgs e)
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
             q = textBox1.Text;
             Console.WriteLine(q);
@@ -235,7 +229,7 @@ namespace PetakUmpet
                 n_vertex = n;
                 edges = new List<int>[n + 1];
                 depth = new int[n + 1];
-                visited = new bool[n+1];
+                visited = new int[n+1];
                 for (int i = 0; i <= n; i++)
                 {
                     edges[i] = new List<int>();
@@ -253,7 +247,7 @@ namespace PetakUmpet
                 visited = null;
                 depth = null;
             }
-            
+
             public void addEdge(int origin, int end)
             {
                 edges[origin].Add(end);
@@ -373,7 +367,7 @@ namespace PetakUmpet
                     }
                     return cek;
                 }
-            }    
+            }
         }
     }
 
