@@ -32,3 +32,20 @@ D:\Semester 4\Stima\Petak Umpet\Tubes 2\Tubes-Stima-2\PetakUmpet\obj\Debug\Petak
 D:\Semester 4\Stima\Petak Umpet\Tubes 2\Tubes-Stima-2\PetakUmpet\obj\Debug\PetakUmpet.csproj.CopyComplete
 D:\Semester 4\Stima\Petak Umpet\Tubes 2\Tubes-Stima-2\PetakUmpet\obj\Debug\PetakUmpet.exe
 D:\Semester 4\Stima\Petak Umpet\Tubes 2\Tubes-Stima-2\PetakUmpet\obj\Debug\PetakUmpet.pdb
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\PetakUmpet.exe.config
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\PetakUmpet.exe
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\PetakUmpet.pdb
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.dll
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.Drawing.dll
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.GraphViewerGdi.dll
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.xml
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.Drawing.xml
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\bin\Debug\Microsoft.Msagl.GraphViewerGdi.xml
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csprojAssemblyReference.cache
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.Form1.resources
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.Properties.Resources.resources
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csproj.GenerateResource.cache
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csproj.CoreCompileInputs.cache
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.csproj.CopyComplete
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.exe
+D:\@@ IF @@\Semester 4\Stima\Tugas Besar 2\Stima\2\Tubes-Stima-2-master\PetakUmpet\obj\Debug\PetakUmpet.pdb
