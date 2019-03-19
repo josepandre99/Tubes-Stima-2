@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
-using System.Thread;
+using System.Threading;
 
 namespace PetakUmpet
 {
@@ -30,9 +30,10 @@ namespace PetakUmpet
             InitializeComponent();
         }
 
+       
+
         private void button_LoadFile_Click(object sender, EventArgs e)
         {
-
             // Setting up the file dialog
             openFileGraph.Filter = "*.txt|*.txt|All files (*.*)|*.*";
             openFileGraph.InitialDirectory = Directory.GetCurrentDirectory();
@@ -129,18 +130,19 @@ namespace PetakUmpet
             }
             else
             {
-                for (int i = 0; i < nNode; i++) graph.FindNode((i + 1).ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
-
-                string[] cur_queryLine = q.Split(' ');
-                visitedNode = new List<string>();
-
-                //Show Query
-                //listBox3.Items.Clear();
-                //listBox3.Items.Add(queryLine);
-
-                //virtualGraph.depthNumbering(1);
                 try
-                {
+                { 
+                    for (int i = 0; i < nNode; i++) graph.FindNode((i + 1).ToString()).Attr.FillColor = Microsoft.Msagl.Drawing.Color.White;
+
+                    string[] cur_queryLine = q.Split(' ');
+                    visitedNode = new List<string>();
+
+                    //Show Query
+                    //listBox3.Items.Clear();
+                    //listBox3.Items.Add(queryLine);
+
+                    //virtualGraph.depthNumbering(1);
+                
                     if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
                     {
                         foreach (string visited in visitedNode)
@@ -267,7 +269,7 @@ namespace PetakUmpet
                 Thread thread = new Thread(delegate()
                 {
                     DFS(v, 0);
-                },32000000);
+                },3200000);
                 thread.Start();
             }
 
@@ -306,19 +308,12 @@ namespace PetakUmpet
                     }
                     if (n == 1)
                     {
-                        Thread thread = new Thread(delegate()
-                        {
-                            return (isDistant(y, x));
-                        },20000000);
-                        thread.Start();
+                        return (isDistant(y, x));
+
                     }
                     else
                     {
-                        Thread thread = new Thread(delegate()
-                        {
-                            return (isApproaching(y, x));
-                        },20000000);
-                        thread.Start();
+                        return (isApproaching(y, x));
                     }
                 }
             }
@@ -398,3 +393,4 @@ namespace PetakUmpet
     }
 
 }
+
