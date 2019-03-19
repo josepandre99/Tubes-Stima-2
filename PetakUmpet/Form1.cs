@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.Thread;
 
 namespace PetakUmpet
 {
@@ -263,7 +264,11 @@ namespace PetakUmpet
 
             public void depthNumbering(int v)
             {
-                DFS(v, 0);
+                Thread thread = new Thread(delegate()
+                {
+                    DFS(v, 0);
+                },32000000);
+                thread.Start();
             }
 
             void DFS(int v, int prevr)
@@ -301,12 +306,19 @@ namespace PetakUmpet
                     }
                     if (n == 1)
                     {
-                        return (isDistant(y, x));
-
+                        Thread thread = new Thread(delegate()
+                        {
+                            return (isDistant(y, x));
+                        },20000000);
+                        thread.Start();
                     }
                     else
                     {
-                        return (isApproaching(y, x));
+                        Thread thread = new Thread(delegate()
+                        {
+                            return (isApproaching(y, x));
+                        },20000000);
+                        thread.Start();
                     }
                 }
             }
