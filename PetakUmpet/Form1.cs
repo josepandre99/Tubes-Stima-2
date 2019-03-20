@@ -137,11 +137,10 @@ namespace PetakUmpet
                     string[] cur_queryLine = q.Split(' ');
                     visitedNode = new List<string>();
 
-                    //Show Query
-                    //listBox3.Items.Clear();
-                    //listBox3.Items.Add(queryLine);
-
-                    //virtualGraph.depthNumbering(1);
+                     //Clear listBox3
+                     listBox3.Items.Clear();
+                     //Setting Font in listBox1
+                    listBox3.Font = new Font(Font.FontFamily, 20);
                 
                     if (virtualGraph.checkPosition(Int32.Parse(cur_queryLine[0]), Int32.Parse(cur_queryLine[1]), Int32.Parse(cur_queryLine[2])))
                     {
